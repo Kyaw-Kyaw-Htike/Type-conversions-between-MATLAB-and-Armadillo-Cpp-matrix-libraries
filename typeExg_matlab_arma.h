@@ -3,106 +3,9 @@
 
 // Copyright (C) 2017 Kyaw Kyaw Htike @ Ali Abdul Ghafur. All rights reserved.
 
-/*
-Possible mxClassID values and Types (and the mapping between them):
-mxINT8_CLASS <==> char, byte
-mxUINT8_CLASS <==> unsigned char, byte [used often]
-mxINT16_CLASS <==> short
-mxUINT16_CLASS <==> unsigned short
-mxINT32_CLASS <==> int [used often]
-mxUINT32_CLASS <==> unsigned int [used often]
-mxINT64_CLASS <==> long long
-mxUINT64_CLASS <==> unsigned long long
-mxSINGLE_CLASS <==> float [used often]
-mxDOUBLE_CLASS <==> double [used often]
-Note: "uword" is the typedef for "unsigned int" and is used for used for matrix indices as well as all internal counters and loops
-Note: "sword" is a typedef for a signed integer type
-
-
-Demo of the functions.
-
-========== Code =============
-
-MatlabEngWrapper mew;
-mew.init();
-mew.exec("clear all; X = [1,2;3,4]; X = int32(X);");
-mxArray* X = mew.receive("X");
-arma::Mat<int> X_cv; matlab2arma<int>(X, X_cv, true); mxDestroyArray(X);
-arma::Mat<int> Y_cv = X_cv + 2;
-mxArray* Y; arma2matlab<int>(Y_cv, Y);
-mew.send("Y", Y);
-
-========== Output in Matlab =============
-
-» whos, X, Y
-Name      Size            Bytes  Class    Attributes
-
-X         2x2                16  int32
-Y         2x2                16  int32
-
-
-X =
-
-1           2
-3           4
-
-
-Y =
-
-3           4
-5           6
-
-
-========== Code =============
-
-MatlabEngWrapper mew;
-mew.init();
-mew.exec("clear all; X(:,:,1) = [1,2;3,4]; X(:,:,2) = [1,2;3,4]; X = single(X);");
-mxArray* X = mew.receive("X");
-arma::Cube<float> X_cv; matlab2arma<float>(X, X_cv, true); mxDestroyArray(X);
-arma::Cube<float> Y_cv = X_cv + 2;
-mxArray* Y; arma2matlab<float>(Y_cv, Y);
-mew.send("Y", Y);
-
-========== Output in Matlab =============
-
-» whos, X, Y
-Name      Size             Bytes  Class     Attributes
-
-X         2x2x2               32  single
-Y         2x2x2               32  single
-
-
-X(:,:,1) =
-
-1     2
-3     4
-
-
-X(:,:,2) =
-
-1     2
-3     4
-
-
-Y(:,:,1) =
-
-3     4
-5     6
-
-
-Y(:,:,2) =
-
-3     4
-5     6
-
-
-*/
-
 #include <armadillo>
 #include "mex.h"
 #include <cstring> // for memcpy
-
 
 // this namespace contains helper functions to be used only in this file (not be called from outside)
 // they are all put in a namespace to avoid clashing (resulting in linker errors) with other same
@@ -225,6 +128,103 @@ void arma2matlabContig(const arma::Cube<T>& matIn, mxArray* &matOut)
 	const T *src_pointer = (T*)matIn.memptr();
 	std::memcpy(dst_pointer, src_pointer, sizeof(T)*matIn.n_elem);
 }
+
+/*
+Possible mxClassID values and Types (and the mapping between them):
+mxINT8_CLASS <==> char, byte
+mxUINT8_CLASS <==> unsigned char, byte [used often]
+mxINT16_CLASS <==> short
+mxUINT16_CLASS <==> unsigned short
+mxINT32_CLASS <==> int [used often]
+mxUINT32_CLASS <==> unsigned int [used often]
+mxINT64_CLASS <==> long long
+mxUINT64_CLASS <==> unsigned long long
+mxSINGLE_CLASS <==> float [used often]
+mxDOUBLE_CLASS <==> double [used often]
+Note: "uword" is the typedef for "unsigned int" and is used for used for matrix indices as well as all internal counters and loops
+Note: "sword" is a typedef for a signed integer type
+
+
+Demo of the functions.
+
+========== Code =============
+
+MatlabEngWrapper mew;
+mew.init();
+mew.exec("clear all; X = [1,2;3,4]; X = int32(X);");
+mxArray* X = mew.receive("X");
+arma::Mat<int> X_cv; matlab2arma<int>(X, X_cv, true); mxDestroyArray(X);
+arma::Mat<int> Y_cv = X_cv + 2;
+mxArray* Y; arma2matlab<int>(Y_cv, Y);
+mew.send("Y", Y);
+
+========== Output in Matlab =============
+
+Â» whos, X, Y
+Name      Size            Bytes  Class    Attributes
+
+X         2x2                16  int32
+Y         2x2                16  int32
+
+
+X =
+
+1           2
+3           4
+
+
+Y =
+
+3           4
+5           6
+
+
+========== Code =============
+
+MatlabEngWrapper mew;
+mew.init();
+mew.exec("clear all; X(:,:,1) = [1,2;3,4]; X(:,:,2) = [1,2;3,4]; X = single(X);");
+mxArray* X = mew.receive("X");
+arma::Cube<float> X_cv; matlab2arma<float>(X, X_cv, true); mxDestroyArray(X);
+arma::Cube<float> Y_cv = X_cv + 2;
+mxArray* Y; arma2matlab<float>(Y_cv, Y);
+mew.send("Y", Y);
+
+========== Output in Matlab =============
+
+Â» whos, X, Y
+Name      Size             Bytes  Class     Attributes
+
+X         2x2x2               32  single
+Y         2x2x2               32  single
+
+
+X(:,:,1) =
+
+1     2
+3     4
+
+
+X(:,:,2) =
+
+1     2
+3     4
+
+
+Y(:,:,1) =
+
+3     4
+5     6
+
+
+Y(:,:,2) =
+
+3     4
+5     6
+
+
+*/
+
 
 
 #endif
